@@ -25,8 +25,8 @@ class Solution {
         return count;
     }
     public boolean isPalindrome(String s, int l, int r) {
-    while (l < r) {
-        if (s.charAt(l) != s.charAt(r)) {
+    while (l<r) {
+        if (s.charAt(l)!=s.charAt(r)) {
             return false;
         }
         l++;
