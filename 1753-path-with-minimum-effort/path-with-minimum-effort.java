@@ -1,66 +1,71 @@
 class Solution {
     public class Triplet implements Comparable<Triplet>{
-        int row;
-        int col;
-        int diff;
+        int r;
+        int c;
+        int effort;
 
-        Triplet(int row, int col, int diff){
-            this.row=row;
-            this.col=col;
-            this.diff=diff;
+        Triplet(int r,int c,int effort){
+            this.r=r;
+            this.c=c;
+            this.effort=effort;
         }
+
         public int compareTo(Triplet t){
-            return this.diff-t.diff;
+            if(this.effort==t.effort) return this.r-t.r;
+            return this.effort-t.effort;
         }
-
     }
     public int minimumEffortPath(int[][] heights) {
-        int m=heights.length,n=heights[0].length;
-        int[][] ans=new int[m][n];
+        int[][] ans=new int[heights.length][heights[0].length];
+        int m=ans.length;
+        int n=ans[0].length;
         for(int i=0;i<m;i++){
             for(int j=0;j<n;j++){
                 ans[i][j]=Integer.MAX_VALUE;
             }
         }
         ans[0][0]=0;
-        PriorityQueue<Triplet> pq=new PriorityQueue<>();
+        PriorityQueue<Triplet> pq = new PriorityQueue<>();
         pq.add(new Triplet(0,0,0));
         while(pq.size()>0){
-            Triplet top=pq.remove();
-            int r=top.row,c=top.col,d=top.diff;
-            if(r==m-1 && c==n-1) break;
-            if(r>0){
-                int e=Math.abs(heights[r][c]-heights[r-1][c]);
-                e=Math.max(e,d);
-                if(e<ans[r-1][c]){
-                    ans[r-1][c]=e;
-                    pq.add(new Triplet(r-1,c,e));
+            Triplet t=pq.poll();
+            int i=t.r;
+            int j=t.c;
+            int eff=t.effort;
+            if(i==m-1 && j==n-1) break;
+            if(i>0){
+                int e=Math.abs(heights[i][j]-heights[i-1][j]);
+                e=Math.max(e,eff);
+                if(e<ans[i-1][j]){
+                    ans[i-1][j]=e;
+                    pq.add(new Triplet(i-1,j,e));
                 }
             }
-            if(c>0){
-                int e=Math.abs(heights[r][c]-heights[r][c-1]);
-                e=Math.max(e,d);
-                if(e<ans[r][c-1]){
-                    ans[r][c-1]=e;
-                    pq.add(new Triplet(r,c-1,e));
+            if(i<m-1){
+                int e=Math.abs(heights[i][j]-heights[i+1][j]);
+                e=Math.max(e,eff);
+                if(e<ans[i+1][j]){
+                    ans[i+1][j]=e;
+                    pq.add(new Triplet(i+1,j,e));
                 }
             }
-            if(r<m-1){
-                int e=Math.abs(heights[r][c]-heights[r+1][c]);
-                e=Math.max(e,d);
-                if(e<ans[r+1][c]){
-                    ans[r+1][c]=e;
-                    pq.add(new Triplet(r+1,c,e));
+            if(j<n-1){
+                int e=Math.abs(heights[i][j]-heights[i][j+1]);
+                e=Math.max(e,eff);
+                if(e<ans[i][j+1]){
+                    ans[i][j+1]=e;
+                    pq.add(new Triplet(i,j+1,e));
                 }
             }
-            if(c<n-1){
-                int e=Math.abs(heights[r][c]-heights[r][c+1]);
-                e=Math.max(e,d);
-                if(e<ans[r][c+1]){
-                    ans[r][c+1]=e;
-                    pq.add(new Triplet(r,c+1,e));
+            if(j>0){
+                int e=Math.abs(heights[i][j]-heights[i][j-1]);
+                e=Math.max(e,eff);
+                if(e<ans[i][j-1]){
+                    ans[i][j-1]=e;
+                    pq.add(new Triplet(i,j-1,e));
                 }
             }
+            
         }
         return ans[m-1][n-1];
     }
